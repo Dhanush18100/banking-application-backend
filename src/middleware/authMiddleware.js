@@ -33,6 +33,34 @@ const authMiddleware=async (req,res,next) => {
 
 }
 
+const authSystemUserMiddleware=async (req,res,next) => {
+    const token=req.cookies.token || req.headers.authorization?.split(" ")[ 1 ]
+
+    if(!token){
+        return res.json({
+            success:false,
+            message:"Unauthorized access"
+        })
+    }
+    try {
+        const decoded=jwt.verify(token,process.env.JWT_SECRET)
+
+        const user=await userModel.findById(decoded.userId).select("+systemUser")
+
+        if(!user.systemUser){
+            return res.json({
+                message:"Forbidden, not a system user"
+            })
+        }
+        req.user=user
+
+        return next()
+
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports={
-    authMiddleware
+    authMiddleware,authSystemUserMiddleware
 }
