@@ -13,8 +13,7 @@ A robust and scalable backend solution for a modern banking application develope
 - Transfer money to other user
 - Token blacklisting
 - Email altert
-- 
-
+  
 
 ## 🛠️ Tech Stack
 
